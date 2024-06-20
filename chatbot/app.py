@@ -7,6 +7,7 @@ from response import generate_response
 import json 
 import polars as pl
 import sys 
+import re
 load_dotenv()
 
 file_dir = os.path.dirname(__file__)
@@ -41,14 +42,14 @@ def handle_event(event):
     if event['type'] == 'message':
         text = event['message']['text']
         text = text.strip().upper()
+        date_format = re.compile(r'\d{4}-\d{2}-\d{2}')
         if text in symbols:
             reply_message(event['replyToken'], text)
-        elif 'ALERT' in text:
+        elif date_format.match(text):
             reply_message(event['replyToken'], text)
         else:
             pass
 def reply_message(reply_token, message):
-    
     
     # r_json = json.load(open(r'C:\Users\vps\sunny\crm\bloomberg\chatbot\response_helper\box.json'))
     r_json = json.loads(generate_response(message))
@@ -69,6 +70,7 @@ def reply_message(reply_token, message):
             ]
     }
     )
+    print(r.json())
     
     # if r.json()['message'] != 'Invalid reply token':
     #     print (r.status_code)

@@ -16,7 +16,7 @@ destination_dir = file_dir
 
 def load_data(date:str = pd.to_datetime('today').strftime('%Y-%m-%d')):
     db = Database()
-    df = db.query(f"SELECT * FROM bloomberg WHERE DATE(create_at) = '{date}'")
+    df = db.query(f"SELECT * FROM bloomberg ")
     df['date'] = pd.to_datetime(df['date'])
     current_year = pd.Timestamp.now().year
     df = df[df['date'].dt.year == current_year]
@@ -34,5 +34,5 @@ def load_sym():
     return df
 
 if __name__ == '__main__':
-    # load_data()
-    load_sym()
+    load_data()
+    # load_sym()

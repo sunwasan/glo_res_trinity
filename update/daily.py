@@ -10,11 +10,17 @@ from im.im_update import load_im
 
 
 def main():
+    print("Start updating data")
     load_gdrive()
+    print("Load Gdrive")
     load_data()
+    print("Load Data")
     load_broker()
+    print("Load Broker")
     load_im()
+    print("Load IM")
     boardcast_alert()
+    print("Boardcast Alert")
     
 if __name__ == '__main__':
     main()

@@ -38,16 +38,26 @@ def get_sym(sym:str):
         bloomberg_foreign_component = None
         bloomberg_local_component = None
     else:  
-        bloomberg_df = bloomberg[['broker', 'comment', 'target']]
+        bloomberg_df = bloomberg[['broker', 'comment', 'target', 'date']]
         bloomberg_df['type'] = bloomberg_df['broker'].map(type_dict)
         
+        bloomberg_df['date'] = pd.to_datetime(bloomberg_df['date'])
+        bloomberg_df.sort_values('date', ascending=False, inplace=True)
+        bloomberg_df['date'] = bloomberg_df['date'].dt.strftime('%Y-%m-%d')
+        bloomberg_df.drop_duplicates(subset=['broker', 'comment', 'target'], keep='first', inplace=True)
+
+        for col in bloomberg_df.columns:
+            if col == 'target':
+                bloomberg_df[col] = bloomberg_df[col].apply(lambda x: f'{x:,.2f}')
+            else:
+                bloomberg_df[col] = bloomberg_df[col].apply(lambda x: f'{x}')
+
         bloomberg_df_local = bloomberg_df[bloomberg_df['type'] == 'local'].drop(columns='type').reset_index(drop=True)
         bloomberg_df_foreign = bloomberg_df[bloomberg_df['type'] == 'foreign'].drop(columns='type').reset_index(drop=True)
         
         
-        
-        bloomberg_foreign_component = flex.table_3_1_1(bloomberg_df_foreign, True)
-        bloomberg_local_component = flex.table_3_1_1(bloomberg_df_local, True)
+        bloomberg_foreign_component = flex.table_4_col(bloomberg_df_foreign, True)
+        bloomberg_local_component = flex.table_4_col(bloomberg_df_local, True)
     
     
     # ------------------------------- IM Component ------------------------------- #

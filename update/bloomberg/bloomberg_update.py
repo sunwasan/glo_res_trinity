@@ -3,7 +3,7 @@ import sys
 import os 
 
 file_dir = os.path.dirname(__file__)
-update_dir = os.path.join(file_dir, '..', '..')
+update_dir = os.path.join(file_dir, '..')
 project_dir = os.path.join(update_dir, '..')
 
 dirs = [file_dir, project_dir]
@@ -13,7 +13,10 @@ import json
 
 from helpers.Database import Database
 from helpers.Gdrive import Gdrive
-destination_dir = data_dir = os.path.join(project_dir, 'data')
+
+cfg  = json.load(open(os.path.join(project_dir, 'helpers' , 'config.json')))
+
+destination_dir = data_dir = cfg['data_dir']
 
 def load_gdrive():
     gdrive = Gdrive()

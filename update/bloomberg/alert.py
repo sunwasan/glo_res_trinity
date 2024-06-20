@@ -46,3 +46,6 @@ def boardcast_alert(date:str = yesterday.strftime("%Y-%m-%d")):
                 })
 
     print(response.json())
+
+if __name__ == '__main__':
+    boardcast_alert()

@@ -21,6 +21,7 @@ from helpers.Database import Database
 warnings.filterwarnings('ignore')
 
 def get_alert(date:str = None):
+    
     db = Database()
     df_raw = db.get_data('bloomberg')
 
@@ -70,7 +71,7 @@ def get_alert(date:str = None):
     comment_used.columns = ['broker', 'symbol', 'from', 'to']
     
     res = {
-        'new_listed': new_listed,
+        'new_listed': new_listed.head(20),
         'target': target_used,
         'comment': comment_used,
         'date': yesterday.strftime('%Y-%m-%d')
@@ -79,7 +80,6 @@ def get_alert(date:str = None):
     return res
 
 def alert(date_input:str = None):
-    print(date_input)
     res = get_alert(date_input)
     new_listed = res['new_listed']
     comment = res['comment']
