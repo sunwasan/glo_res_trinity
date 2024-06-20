@@ -143,7 +143,7 @@ class Flex:
         
     def table_3_1_1(self, df, include_header=False):
         def generate_3_1_1_header(row):
-            
+            row = [col.upper() for col in row]
             first_col_setup = {
                 "type":"text",
                 "text":row[0],
