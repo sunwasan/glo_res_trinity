@@ -14,13 +14,13 @@ import json
 
 data_dir = os.path.join(bloomberg_dir,'data')
 
-from Flex import Flex
+from helpers.Flex import Flex
 import warnings 
 from helpers.Database import Database
 
 warnings.filterwarnings('ignore')
 
-def get_alert(date:str = None):
+def get_date_data(date:str = None):
     
     db = Database()
     df_raw = db.get_data('bloomberg')
@@ -79,8 +79,8 @@ def get_alert(date:str = None):
     
     return res
 
-def alert(date_input:str = None):
-    res = get_alert(date_input)
+def get_date(date_input:str = None):
+    res = get_date_data(date_input)
     new_listed = res['new_listed']
     comment = res['comment']
     target = res['target']

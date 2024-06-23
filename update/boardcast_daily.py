@@ -13,7 +13,7 @@ import json
 
 from helpers.Database import Database
 
-from chatbot.response_helper.alert import alert
+from chatbot.response_helper.get_date import get_date
 import requests
 from dotenv import load_dotenv
 import json 
@@ -26,7 +26,7 @@ uuid = uuid.uuid1()
 
 yesterday = (pd.to_datetime('today') - pd.DateOffset(days=1)).date()
 
-def boardcast_alert(date:str = yesterday.strftime("%Y-%m-%d")):
+def boardcast_daily(date:str = yesterday.strftime("%Y-%m-%d")):
     line_url = 'https://api.line.me/v2/bot/message/broadcast'
 
     response = requests.post(line_url, 
@@ -40,12 +40,12 @@ def boardcast_alert(date:str = yesterday.strftime("%Y-%m-%d")):
                             {
                                 'type': 'flex',
                                 "altText": f"Report for {date}",
-                                'contents': json.loads(alert(date))
+                                'contents': json.loads(get_date(date))
                             }
                         ]
                 })
-
+    
     print(response.json())
 
 if __name__ == '__main__':
-    boardcast_alert()
+    boardcast_daily()

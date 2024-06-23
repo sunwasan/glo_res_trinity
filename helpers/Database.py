@@ -124,18 +124,25 @@ class Database ():
                 cursor.close()
                        
 
-        
+    def execute_query(self, query, params=None):
+        cursor = self.cursor
+        if params:
+            cursor.execute(query, params)
+        else:
+            cursor.execute(query)
+        self.connection.commit()
              
     def query(self, query):
         cursor = self.cursor
 
         cursor.execute(query)
         result = cursor.fetchall()
-        # turn to dataframe 
-        columns = cursor.column_names
-        result = pd.DataFrame(result)
-        
-        result.columns = columns
+
+        if not result:  # Check if the result set is empty
+            return pd.DataFrame(columns=cursor.column_names)  # Return an empty DataFrame with column names
+
+        # If the result set is not empty, proceed as before
+        result = pd.DataFrame(result, columns=cursor.column_names)
         return result
         
     def load_data(self, qry, destination_dir):
@@ -149,17 +156,9 @@ class Database ():
         result.to_csv(destination_dir, index=False)
 
     def get_data(self, table):
-        cursor = self.cursor
-        cursor.execute(f"SELECT * FROM {table}")
-        result = cursor.fetchall()
-        columns = cursor.column_names
-        
-        result = pd.DataFrame(result)
-        result.columns = columns
+        result = self.query(f"SELECT * FROM {table}")
         return result
 
 
 if __name__ == "__main__":
     db = Database()
-    df = db.query("SELECT * FROM bloomberg")
-    print(df)
